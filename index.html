@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Predictor Mini App</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 14px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+    button { width: 100%; padding: 12px; border-radius: 10px; border: 0; font-size: 16px; }
+    label { display: block; margin: 8px 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div><b>Фильтры</b></div>
+
+    <label><input id="anti_draw" type="checkbox"> Анти-ничья</label>
+    <label><input id="anti_low" type="checkbox"> Анти-низ</label>
+
+    <label>Минимальная уверенность:
+      <input id="confidence" type="range" min="1" max="10" value="6">
+      <span id="conf_val">6</span>/10
+    </label>
+  </div>
+
+  <button id="sendBtn">Отправить в бота</button>
+
+  <script>
+    Telegram.WebApp.ready();
+
+    const conf = document.getElementById('confidence');
+    const confVal = document.getElementById('conf_val');
+    conf.addEventListener('input', () => confVal.textContent = conf.value);
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const payload = {
+        anti_draw: document.getElementById('anti_draw').checked,
+        anti_low: document.getElementById('anti_low').checked,
+        confidence: Number(conf.value)
+      };
+      Telegram.WebApp.sendData(JSON.stringify(payload));
+      Telegram.WebApp.close();
+    });
+  </script>
+</body>
+</html>
